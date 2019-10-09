@@ -14,6 +14,7 @@ import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
 
 const style = {
   root: {
@@ -30,24 +31,36 @@ const style = {
   },
   paper: {
     padding: 2,
-    // marginBottom: 2,
     textAlign: 'center',
   },
   tableRow: {
     backgroundColor: '#D3D3D3'
   },
   button: {
-    color:'#008000',
-    marginRight: 13
+    color: '#008000',
+    marginRight: 13,
+    float: 'right'
+  },
+  table: {
+    border: '0px',
+    padding: 0
+  },
+  text: {
+    backgroundColor: '#DB7093',
+    margin: 6
+  },
+  container: {
+    marginTop: '6%'
   }
 };
 
 export default class App extends React.Component {
 
   state = {
-    clientResult: []
+    clientResult: [] // set the state as empty initally
   };
 
+  //fetch the data from mock-server and set state of the data
   componentDidMount() {
     fetch(`http://localhost:3000/clients/12345678`)
       .then(res => res.json())
@@ -58,18 +71,12 @@ export default class App extends React.Component {
   render() {
     const { clientResult } = this.state;
 
-    let name = clientResult && clientResult.clientName;
-    let sortCode = clientResult && clientResult.invoiceAccount && clientResult.invoiceAccount.sortCode;
-    let accountNumber = clientResult && clientResult.invoiceAccount && clientResult.invoiceAccount.accountNumber;
-    let currency = clientResult && clientResult.invoiceAccount && clientResult.invoiceAccount.currency;
-    let status = clientResult && clientResult.invoiceAccount && clientResult.invoiceAccount.accountStatus;
-    let address = clientResult && clientResult.invoiceAccount && clientResult.clientAddress && clientResult.clientAddress.firstLine;
+    const refUrl = 'javascript:;';
 
-    let addressFirstLine = clientResult && clientResult.invoiceAccount && clientResult.clientAddress && clientResult.clientAddress.firstLine;
-    let addressSecondLine = clientResult && clientResult.invoiceAccount && clientResult.clientAddress && clientResult.clientAddress.secondLine;
-    let city = clientResult && clientResult.invoiceAccount && clientResult.clientAddress && clientResult.clientAddress.city;
-    let country = clientResult && clientResult.invoiceAccount && clientResult.clientAddress && clientResult.clientAddress.country;
-    let postcode = clientResult && clientResult.invoiceAccount && clientResult.clientAddress && clientResult.clientAddress.postcode;
+    // pick the values of every required data from the updated result of client data
+    let name = clientResult && clientResult.clientName;
+    let invoiceAccount = clientResult && clientResult.invoiceAccount;
+    let clientAddress = clientResult && clientResult.clientAddress;
 
     return (
       <div className="App">
@@ -77,7 +84,7 @@ export default class App extends React.Component {
           <AppBar style={style.appBar}>
             <Container maxWidth="lg">
               <Toolbar>
-                <IconButton edge="start" style={style.homeButton} color="inherit" aria-label="home">
+                <IconButton edge="start" style={style.homeButton} color="inherit">
                   <HomeIcon />
                 </IconButton>
                 <Divider orientation="vertical" />
@@ -95,7 +102,7 @@ export default class App extends React.Component {
               </Toolbar>
             </Container>
           </AppBar>
-          <Container maxWidth="lg">
+          <Container maxWidth="lg" style={style.container}>
             <h1>Client Summary</h1>
             <Grid container spacing={3}>
               <Grid item xs={5}>
@@ -103,26 +110,26 @@ export default class App extends React.Component {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell><h4>Client Id:</h4></TableCell>
-                      <TableCell>{clientResult.client_id}</TableCell>
+                      <TableCell style={style.table}><h4>Client Id:</h4></TableCell>
+                      <TableCell style={style.table}>{clientResult.client_id}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
-                      <TableCell><h4>Client Name:</h4></TableCell>
-                      <TableCell>{clientResult.clientName}</TableCell>
+                      <TableCell style={style.table}><h4>Client Name:</h4></TableCell>
+                      <TableCell style={style.table}>{clientResult.clientName}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell><h4>Client status:</h4></TableCell>
-                      <TableCell>{clientResult.status}</TableCell>
+                      <TableCell style={style.table}><h4>Client status:</h4></TableCell>
+                      <TableCell style={style.table}>{clientResult.status}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell><h4>Password valid for:</h4></TableCell>
-                      <TableCell>{clientResult.passwordExpiryPeriod}</TableCell>
+                      <TableCell style={style.table}><h4>Password valid for:</h4></TableCell>
+                      <TableCell style={style.table}>{clientResult.passwordExpiryPeriod}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell><h4>Active from:</h4></TableCell>
-                      <TableCell>{clientResult.activeFrom}</TableCell>
+                      <TableCell style={style.table}><h4>Active from:</h4></TableCell>
+                      <TableCell style={style.table}>{clientResult.activeFrom}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -132,22 +139,22 @@ export default class App extends React.Component {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Name:</TableCell>
-                      <TableCell>{name}</TableCell>
+                      <TableCell style={style.table}><h4>Name:</h4></TableCell>
+                      <TableCell style={style.table}>{name}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
-                      <TableCell>UserName:</TableCell>
-                      <TableCell>{name}</TableCell>
+                      <TableCell style={style.table}><h4>UserName:</h4></TableCell>
+                      <TableCell style={style.table}>{name && name.toUpperCase()}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Client Address:</TableCell>
-                      <TableCell>{addressFirstLine} <br />
-                        {addressSecondLine} <br />
-                        {city}<br />
-                        {postcode}<br />
-                        {country}<br />
+                      <TableCell style={style.table}><h4>Client Address:</h4></TableCell>
+                      <TableCell style={style.table}>{clientAddress && clientAddress.firstLine} <br />
+                        {clientAddress && clientAddress.secondLine} <br />
+                        {clientAddress && clientAddress.city}<br />
+                        {clientAddress && clientAddress.postcode}<br />
+                        {clientAddress && clientAddress.country}<br />
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -155,48 +162,58 @@ export default class App extends React.Component {
               </Grid>
             </Grid>
             <Paper style={style.paper}>
-              <Table style = {{borderCollapse: 'collapse'}}>
-                <TableHead>
+              <Table>
+                <TableHead style={{borderTop:'5px solid #008000'}}>
                   <TableRow>
                     <TableCell><h3>Invoice Details</h3></TableCell>
-                    <TableCell><a>What are the sort code and account number used for?</a></TableCell>
+                    <TableCell>
+                      <Link href={refUrl} style={{ float: 'right', color: '#008000' }}>
+                        What are the sort code and account number used for?
+                      </Link>
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   <TableRow style={style.tableRow}>
                     <TableCell>Invoice sort code:</TableCell>
-                    <TableCell>{sortCode}</TableCell>
+                    <TableCell>{invoiceAccount && invoiceAccount.sortCode}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>Invoice account number:</TableCell>
-                    <TableCell>{accountNumber}</TableCell>
+                    <TableCell>{invoiceAccount && invoiceAccount.accountNumber}</TableCell>
                   </TableRow>
                   <TableRow style={style.tableRow}>
                     <TableCell>Invoice account currency:</TableCell>
-                    <TableCell>{currency}</TableCell>
+                    <TableCell>{invoiceAccount && invoiceAccount.currency}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>Invoice account status:</TableCell>
                     <TableCell>
-                      <Button variant="contained" color="secondary">
+                      <span style={style.text}>Terminated</span>
+                      {/* <Button variant="contained" color="secondary">
                         Terminated
-                    </Button>
+                    </Button> */}
                       <br />
                       Please contact your Relationship Manager. Your invoice account is not active</TableCell>
                   </TableRow>
                   <TableRow style={style.tableRow}>
                     <TableCell>Invoice account contact:</TableCell>
-                    <TableCell>{address}</TableCell>
+                    <TableCell>{clientAddress && clientAddress.firstLine}<br/>
+                      {clientAddress && clientAddress.secondLine} <br />
+                      {clientAddress && clientAddress.city}<br />
+                      {clientAddress && clientAddress.postcode}<br />
+                      {clientAddress && clientAddress.country}<br />
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
               <Grid container spacing={3}>
-              <Grid item xs={1}></Grid>
-              <Grid item xs={12}>
-              <Button variant="outlined" style={style.button}>
-                Edit Details
+                <Grid item xs={1}></Grid>
+                <Grid item xs={12}>
+                  <Button variant="outlined" style={style.button}>
+                    Edit Details
               </Button>
-              </Grid>
+                </Grid>
               </Grid>
             </Paper>
           </Container>
